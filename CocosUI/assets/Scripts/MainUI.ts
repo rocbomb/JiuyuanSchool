@@ -1,13 +1,19 @@
-import { _decorator, Component, Node } from 'cc';
+import { _decorator, Component, Node, SpriteFrame } from 'cc';
 const { ccclass, property } = _decorator;
 import { Button , VideoPlayer} from "cc";
-import { log, EventHandler } from 'cc';
+import { log, EventHandler, Sprite} from 'cc';
 
 @ccclass('MainUI')
 export class MainUI extends Component {
 
     @property(Button)
     public playBtn:Button
+
+    @property(SpriteFrame)
+    public playSprite:SpriteFrame
+
+    @property(SpriteFrame)
+    public pauseSprite:SpriteFrame
 
     @property(VideoPlayer)
     public videoPlayer:VideoPlayer
@@ -21,6 +27,8 @@ export class MainUI extends Component {
         clickEventHandler.handler = 'callback';
         clickEventHandler.customEventData = 'foobar';
         this.playBtn.clickEvents.push(clickEventHandler);
+
+        this.changeBtn(false)
     }
 
     private count:number
@@ -29,6 +37,7 @@ export class MainUI extends Component {
         if(this.videoPlayer.isPlaying)
         {
             this.videoPlayer.pause()
+            this.changeBtn(false)
         }
         else
         {
@@ -43,11 +52,25 @@ export class MainUI extends Component {
                 this.count = 0
             }
             this.videoPlayer.play()
+            this.changeBtn(true)
         }
     }
 
     update(deltaTime: number) {
         
+    }
+
+
+    changeBtn(isPlaying: boolean)
+    {
+        if(isPlaying)
+        {
+            this.playBtn.node.getComponent(Sprite).spriteFrame = this.playSprite
+        }
+        else
+        {
+            this.playBtn.node.getComponent(Sprite).spriteFrame = this.pauseSprite
+        }
     }
 }
 
