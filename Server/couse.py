@@ -1,30 +1,26 @@
-CourseList = [    
-    {
-        "id": 1,
-        "name": "课程0_XXX", 
-        "type": "产品", 
-        "video": "class_1.mp4", 
-        "time": 30
-    },
-    {
-        "id": 2,
-        "name": "课程1_XXX", 
-        "type": "产品", 
-        "video": "class_2.mp4", 
-        "time": 40
-    },
-    {
-        "id": 3,
-        "name": "学习学习", 
-        "type": "产品", 
-        "video": "class_3.mp4", 
-        "time": 50
-    },
-    {
-        "id": 4,
-        "name": "标题5", 
-        "type": "产品", 
-        "video": "class_4.mp4", 
-        "time": 60
-    },
-]
+import openpyxl
+
+CourseList = []
+def readXlsx():
+    CourseList.clear()
+    # 打开 Excel 文件
+    wb = openpyxl.load_workbook('course.xlsx')
+    # 选择第一个工作表
+    sheet = wb.active
+    # 遍历每一行数据
+    for row in sheet.iter_rows(values_only=True, min_row=2):
+        course_id, course_name, course_group, video_file_name, video_duration = row
+        # 输出每一行数据
+        print(f"课程ID: {course_id}, 课程名称: {course_name}, 课程组名: {course_group}, 视频文件名称: {video_file_name}, 视频时长(分钟): {video_duration}")
+        course_data = {
+            "id": course_id,
+            "name": course_name,
+            "type": course_group,
+            "video": video_file_name,
+            "time": video_duration
+        }
+        # 将字典添加到数据列表中
+        CourseList.append(course_data)
+    # 关闭 Excel 文件
+    wb.close()
+readXlsx()
