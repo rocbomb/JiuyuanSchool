@@ -16,7 +16,7 @@ def readXlsx():
         
         # 将学生信息存储为字典
         student_data = {
-            "id": id,
+            "id": int(id),
             "name": name,
             "phone": phone,
             "password": password,

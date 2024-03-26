@@ -13,11 +13,11 @@ def readXlsx():
         # 输出每一行数据
         print(f"课程ID: {course_id}, 课程名称: {course_name}, 课程组名: {course_group}, 视频文件名称: {video_file_name}, 视频时长(分钟): {video_duration}")
         course_data = {
-            "id": course_id,
+            "id": int(course_id),
             "name": course_name,
             "type": course_group,
             "video": video_file_name,
-            "time": video_duration
+            "time": int(video_duration)
         }
         # 将字典添加到数据列表中
         CourseList.append(course_data)

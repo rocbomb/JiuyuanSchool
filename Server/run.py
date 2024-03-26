@@ -28,6 +28,7 @@ def studentInfos():
 
             record = None
             for r in records:
+                print(f"{r.student_id}  {student_info['id']}")
                 if r.student_id == student_info['id'] and r.course_id == course_info['id']:
                     record = r
                     break
@@ -40,7 +41,7 @@ def studentInfos():
                 'course': course_info['name'],
                 'over': over,
                 'video_time': course_info['time'],
-                'study_time': record.study_time / 60 if record != None else -1
+                'study_time': int(record.study_time / 60) if record != None else -1
                 }
             result.append(info)
     return render_template('student.html', student_info=result)
