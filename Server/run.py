@@ -19,37 +19,29 @@ class StudyRecord(db.Model):
 
 @app.route('/api/result')
 def studentInfos():
-    all = request.args.get('pass')
-    print(all)
-    result = [
-        {'name': '张三', 'course': '数学', 'over': "完成", 'study_time': '2'},
-        {'name': '李四', 'course': '英语', 'over': "完成", 'study_time': '1.5'},
-        {'name': '王五', 'course': '物理', 'over': "未完成", 'study_time': '3'}
-    ]
+    result = []
     records = StudyRecord.query.all()
-    for r in records:
-        student_id = r.student_id
-        course_id = r.course_id
-        student_info = findStudentById(student_id)
-        if student_info is None:
-            continue
-        course_info = findCourse(course_id)
-        if course_info is None:
-            continue
-        over = "未完成"
-        is_over = r.study_time / 60 + 1 > course_info['time']
-        if is_over:
-            over = "完成"
-        info = {
-            'name': student_info['name'],
-            'course': course_info['name'],
-            'over': over,
-            'video_time': course_info['time'],
-            'study_time': r.study_time / 60
-            }
-        if all == "false":
-            result.append(info)
-        elif is_over:
+    for student_info in students_data:
+        for course_info in CourseList:
+            if not course_info["type"] in student_info["courses_list"]:
+                continue
+
+            record = None
+            for r in records:
+                if r.student_id == student_info['id'] and r.course_id == course_info['id']:
+                    record = r
+                    break
+                continue
+            over = "未完成"
+            if record != None and record.study_time / 60 + 1 > course_info['time']:
+                over = "完成"
+            info = {
+                'name': student_info['name'],
+                'course': course_info['name'],
+                'over': over,
+                'video_time': course_info['time'],
+                'study_time': record.study_time / 60 if record != None else -1
+                }
             result.append(info)
     return render_template('student.html', student_info=result)
 
