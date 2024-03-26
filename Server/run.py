@@ -129,4 +129,5 @@ def create_db():
 
 if __name__ == '__main__':
     create_db()
-    app.run(debug=True, port=5000)
+    #app.run(debug=True, port=5000)
+    app.run(port=5000)
