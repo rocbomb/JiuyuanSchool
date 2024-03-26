@@ -4,7 +4,7 @@ CourseList = []
 def readXlsx():
     CourseList.clear()
     # 打开 Excel 文件
-    wb = openpyxl.load_workbook('course.xlsx')
+    wb = openpyxl.load_workbook('xlsx/course.xlsx')
     # 选择第一个工作表
     sheet = wb.active
     # 遍历每一行数据

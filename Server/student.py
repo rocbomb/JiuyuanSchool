@@ -7,7 +7,7 @@ import json
 students_data = []
 def readXlsx():
     # 打开 Excel 文件
-    wb = openpyxl.load_workbook('student.xlsx')
+    wb = openpyxl.load_workbook('xlsx/student.xlsx')
     sheet = wb.active
     # 遍历每一行数据，跳过第一行（标题行）
     for row in sheet.iter_rows(values_only=True, min_row=2):
