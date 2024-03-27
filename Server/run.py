@@ -54,6 +54,7 @@ def create_study_record():
     study_record = StudyRecord(student_id=student_id, course_id=course_id, study_time=study_time)
     db.session.add(study_record)
     db.session.commit()
+
     return {'id': study_record.id}, 201
 
 @app.route('/api/study_records', methods=['GET'])
@@ -75,6 +76,7 @@ def update_records():
     else:
         record.study_time = record.study_time + study_time
         db.session.commit()
+    print(f"update_records student_id: {student_id}, course_id: {course_id}, study_time: {study_time}, endTime: {record.study_time}")
     return f"{course_id},{record.study_time}", 200
 
 def findStudent(phone):
