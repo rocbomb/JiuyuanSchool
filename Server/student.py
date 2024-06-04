@@ -12,6 +12,8 @@ def readXlsx():
     # 遍历每一行数据，跳过第一行（标题行）
     for row in sheet.iter_rows(values_only=True, min_row=2):
         id, name, phone, password, courses = row
+        if courses is None:
+            continue
         courses_list = courses.split('|') if '|' in courses else [courses]  # 多个课程使用 | 分隔
         
         # 将学生信息存储为字典
