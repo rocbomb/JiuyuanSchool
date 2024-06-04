@@ -5,6 +5,26 @@ from sqlalchemy.orm import relationship
 from couse import CourseList
 from student import students_data
 import os
+import logging
+from logging.handlers import TimedRotatingFileHandler
+
+# 配置日志
+log_path = './logs/logfile.log'  # 日志文件的路径
+if not os.path.exists(os.path.dirname(log_path)):
+    os.makedirs(os.path.dirname(log_path))
+
+
+# 设置日志格式
+log_format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+logging.basicConfig(level=logging.INFO, format=log_format)
+
+# 设置日志轮转
+handler = TimedRotatingFileHandler(log_path, when='midnight', interval=1, backupCount=30)
+handler.setFormatter(logging.Formatter(log_format))
+logger = logging.getLogger('my_logger')
+logger.addHandler(handler)
+
+
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test2.db'
 db = SQLAlchemy(app)
@@ -28,7 +48,7 @@ def studentInfos():
 
             record = None
             for r in records:
-                print(f"{r.student_id}  {student_info['id']}")
+                logger.info(f"{r.student_id}  {student_info['id']}")
                 if r.student_id == student_info['id'] and r.course_id == course_info['id']:
                     record = r
                     break
@@ -76,7 +96,7 @@ def update_records():
     else:
         record.study_time = record.study_time + study_time
         db.session.commit()
-    print(f"update_records student_id: {student_id}, course_id: {course_id}, study_time: {study_time}, endTime: {record.study_time}")
+    logger.info(f"update_records student_id: {student_id}, course_id: {course_id}, study_time: {study_time}, endTime: {record.study_time}")
     return f"{course_id},{record.study_time}", 200
 
 def findStudent(phone):
@@ -102,12 +122,15 @@ def login():
     userid = request.json.get('userid')
     password = request.json.get('password')
 
+    logger.info(f"login start userid:{userid} password:{password}")
     student = findStudent(userid)
 
     if student is None:
+        logger.info(f"login no user userid:{userid} ")
         return {'id': -1, "error": "没有该用户"}, 201
 
     if str(student["password"]) != str(password):
+        logger.info(f"login password error userid:{userid} ")
         return {'id': -1, "error": "密码错误"}, 201
 
     records = StudyRecord.query.filter_by(student_id = student["id"]).all()
@@ -123,6 +146,9 @@ def login():
         "videos":videos,
         "records":[{'course_id': r.course_id, 'study_time': r.study_time} for r in records]
     }
+
+    logger.info(f"login succeed userid:{userid} password:{password}")
+
     return ret, 201
 
 def create_db():
